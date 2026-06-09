@@ -1,0 +1,117 @@
+// =========================================================
+// ZOMATO BI PLATFORM: CORE MODELING SCRIPTS & UNIT ECONOMICS
+// =========================================================
+
+// ---------------------------------------------------------
+// SECTION A: FOUNDATIONAL METRICS (THE TRANSACTION ENGINE)
+// ---------------------------------------------------------
+
+// 1. GROSS MERCHANDISE VALUE (GMV)
+// Evaluates the aggregate gross financial sales volume processed through platform checkouts.
+
+Gross Merchandise Value = SUM('zomato'[approx_cost])
+
+
+// 2. TOTAL TRANSACTION VOLUME (PLATFORM ORDERS)
+// Computes an absolute, airtight operational count of active platform transactions.
+
+Total Orders = COUNTROWS('zomato')
+
+
+// 3. AVERAGE ORDER VALUE (AOV / BASKET SIZE)
+// Tracks the baseline financial spending tier per checkout ticket across filtered dimensions.
+
+Average Order Value = 
+DIVIDE(
+    [Gross Merchandise Value],
+    [Total Orders],
+    0
+)
+
+
+// 4. TOTAL CUSTOMER ENGAGEMENT LOGS (TOTAL VOTES)
+// Aggregates the macro-level customer review and vote footprint across the platform.
+
+Total Platform Votes = SUM('zomato'[votes])
+
+
+// ---------------------------------------------------------
+// SECTION B: ADVANCED METRICS (STRATEGIC BUSINESS INSIGHTS)
+// ---------------------------------------------------------
+
+// 5. ZOMATO NET CORPORATE INCOME
+// Isolates core commission and platform revenues while treating third-party fees strictly as operational expenses.
+
+Zomato Income = 
+VAR CommissionRevenue = SUM('zomato'[commission_fees])
+VAR PlatformFeeRevenue = SUM('zomato'[platform_fees])
+VAR GatewayExpense = SUM('zomato'[payment_gateway_costs])
+RETURN
+    CommissionRevenue + PlatformFeeRevenue - GatewayExpense
+
+
+// 6. DUAL-AXIS FINANCIAL TAKE RATE CONTROLLER
+// Measures the exact monetization efficiency margin of the platform against gross sales.
+
+Zomato Take Rate % = 
+DIVIDE(
+    [Zomato Income], 
+    [Gross Merchandise Value], 
+    0
+)
+
+
+// 7. REGIONAL CUISINE DEMAND VELOCITY (PAGE 2 MATRIX ANCHOR)
+// Bypasses localized population density bias to calculate true merchant pressure points.
+
+Demand Volume Per Restaurant = 
+COALESCE(
+    DIVIDE(
+        [Total Platform Votes], 
+        DISTINCTCOUNT('zomato'[name]), 
+        BLANK()
+    ),
+    0
+)
+
+
+// 8. TABLE BOOKING PREMIUM REVENUE LIFT
+// Quantifies the exact percentage increase in average check sizes when merchants activate reservation features.
+
+Booking Revenue Lift % = 
+VAR AvgWithBooking = CALCULATE([Average Order Value], 'zomato'[book_table] = "Yes")
+VAR AvgNoBooking = CALCULATE([Average Order Value], 'zomato'[book_table] = "No")
+RETURN
+    DIVIDE(
+        AvgWithBooking - AvgNoBooking, 
+        AvgNoBooking, 
+        0
+    )
+
+
+// 9. APP CUSTOMER SATISFACTION INDEX (PAGE 3 TOP-ROW KPI)
+// Tracks the high-tier order volume share filtering strictly for excellent merchant compliance (>= 4.0/5.0).
+
+Customer Satisfaction % = 
+DIVIDE(
+    CALCULATE(
+        [Total Orders], 
+        'zomato'[rate] >= 4.0
+    ),
+    [Total Orders],
+    0
+)
+
+
+// 10. REGEX FRACTION EXTRACTION & VENDOR BUCKETING (ROW-LEVEL CALCULATED COLUMN)
+// Handles text anomalies, splits string fractions ("4.1/5"), and cleanly isolates unrated new partners.
+
+Rating Distribution = 
+SWITCH(
+    TRUE(),
+    ISBLANK(zomato[rate]), "Unrated / New",
+    zomato[rate] >= 4.0, "Very Good",
+    zomato[rate] >= 3.0, "Average",
+    zomato[rate] >= 2.0, "Poor",
+    "Very Poor"
+)
