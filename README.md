@@ -2,7 +2,7 @@
 
 ## 📌 Project Quick Links
 *   📊 **[Download Dashboard (.pbix)](https://drive.google.com/drive/u/3/folders/1uiJXsCPkkss843CoMRan76lpV7_AMOjn)** — *Open the complete interactive project file directly.*
-*   🔢 **[View DAX Modeling Folder (./dax-queries/)](./dax-queries/)** — *Explore the clean relational DAX formulas.*
+*   🔢 **[View DAX Modeling Folder (./dax-queries/)](https://github.com/Nikhil-Sagar29/Zomato-Bengaluru-Restaurant-Dashboard/blob/main/04-Zomato%20DAX%20Formulas/Important%20DAX%20formulas%20used.txt)** — *Explore the clean relational DAX formulas.*
 *   📂 **[Access Source Dataset (./dataset/)](https://www.kaggle.com/datasets/himanshupoddar/zomato-bangalore-restaurants/data)** — *Review the regional 51K merchant sample records.*
 
 ---
